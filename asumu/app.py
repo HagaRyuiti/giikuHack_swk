@@ -4,10 +4,24 @@ app = Flask(__name__)
 
 #ホーム画面
 @app.route('/')
+@app.route('/home')
 def home():
-    return render_template('home.html')
+    return render_template('home.htm')
 
-#
+#アカウント画面
+@app.route('/account')
+def account():
+    return render_template('account.htm')
+
+#検索画面
+@app.route('/search')
+def search():
+    return render_template('search.htm')
+
+#作成画面
+@app.route('/create')
+def create():
+    return render_template('create.htm')
 
 if __name__ == '__main__':
     app.run(debug = True)
