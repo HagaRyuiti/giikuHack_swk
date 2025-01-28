@@ -23,5 +23,10 @@ def search():
 def create():
     return render_template('create.htm')
 
+#タイム画面
+@app.route('/timer')
+def timer():
+    return render_template('timer.htm')
+
 if __name__ == '__main__':
     app.run(debug = True)
