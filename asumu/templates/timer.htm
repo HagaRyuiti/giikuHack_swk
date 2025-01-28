@@ -42,9 +42,14 @@
 </script>
 
 <div id="timer">
-<a href = "{{ url_for('home')}}">⏱</a>
+    <button onclick="next()">タイマー</button>
 </div>
 
 <nav>
 </nav>
+<script>
+    function next() {
+        location.href="{{ url_for('timer') }}"
+    }
+</script>
 {% endblock %}
