@@ -1,0 +1,24 @@
+.display{
+    display:flex;
+}
+.circle1{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: pink;
+}
+.circle2{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: skyblue;
+}
+#circleS{
+    position: absolute;
+    right: 10px;
+    bottom: 200px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: skyblue;
+}
