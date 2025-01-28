@@ -1,8 +1,10 @@
 import sqlite3
 
-print(roomcreate(test))
+table = roomcreate(test)
 
-def roomcreate(roomname, ):
+print(table)
+
+def roomcreate(roomname ):
     #roomの作成、アクセス
     room = (roomname + ".db")
     conn = sqlite3.connect(room)
