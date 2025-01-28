@@ -1,9 +1,5 @@
 import sqlite3
 
-table = roomcreate(test)
-
-print(table)
-
 def roomcreate(roomname ):
     #roomの作成、アクセス
     room = (roomname + ".db")
@@ -16,10 +12,18 @@ def roomcreate(roomname ):
 
     #SQL文の実行
     conn.commit()
-    #データベースにコミット
-    conn.close()
 
     sql = "SELECT name FROM sqlite_master WHERE TYPE='table'"
 
-    for t in cursor.execute(sql):
-        print(t)
+    for t in cur.execute(sql):
+        tables = t
+
+    #データベースにコミット
+    conn.close()
+
+    return tables
+
+
+table = roomcreate("test")
+
+print(table)
