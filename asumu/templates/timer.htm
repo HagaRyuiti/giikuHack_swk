@@ -2,7 +2,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename = 'timer.css')}}">
 </head>
 
-
 {% extends "index.htm" %}
 
 {% block content %}
@@ -41,10 +40,15 @@
 <script src="../static/timer.js">
 </script>
 
-<div id="timer">
-<a href = "{{ url_for('home')}}">⏱</a>
-</div>
+<button id="timer" onclick="next()">タイマー</button>
 
 <nav>
 </nav>
+
+<script>
+    function next() {
+        location.href="{{ url_for('home') }}"
+    }
+</script>
+
 {% endblock %}
