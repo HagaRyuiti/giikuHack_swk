@@ -37,18 +37,22 @@
     <button id="stop" onclick="stop()" disabled>Stop</button>
     <button id="reset" onclick="reset()" disabled>Reset</button>
 </div>
-<script src="../static/timer.js">
-</script>
 
 <button id="timer" onclick="next()">タイマー</button>
 
-<nav>
-</nav>
+<form action="/result">
+<button type="submit" id="save" formmethod="post" >保存</button>
+</form>
 
 <script>
     function next() {
         location.href="{{ url_for('home') }}"
     }
 </script>
+
+<script src="../static/timer.js">
+</script>
+<nav>
+</nav>
 
 {% endblock %}
