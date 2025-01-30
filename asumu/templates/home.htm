@@ -27,7 +27,11 @@
     <div id="timer">
     <button onclick="next()">タイマー</button>
     </div>
-    
+
+    {% for room in roomlist %}
+        <li>{{ room }}</li>
+    {% endfor %}
+
     <nav>
     </nav>
 
