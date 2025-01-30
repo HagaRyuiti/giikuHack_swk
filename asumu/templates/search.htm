@@ -1,6 +1,18 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'home.css')}}">
+</head>
+
 {% extends "index.htm" %}
 
 {% block content %}
     <h1>検索</h1>
 
+    <input type="text" id="sr">
+    <div id="create">
+        <button onclick="searchroom()">検索</button>
+    </div>
+
+    <div id="search-results"></div>
+
+    <script src="{{ url_for('static', filename='search.js') }}"></script>
 {% endblock %}

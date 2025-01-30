@@ -56,3 +56,19 @@ def get_tables():
     
     return [{"name": room[0]} for room in rooms]
 
+#
+def roomsearch(key):
+    db_name = "room.db"
+    
+    with sqlite3.connect(db_name) as conn:
+        cur = conn.cursor()
+        search_key = f"%{key}%"  #'%' を key に付与して部分一致検索
+        searchrooms = cur.execute(
+            "SELECT name FROM rooms WHERE name LIKE ?", (search_key,)
+        ).fetchall()
+
+    print(searchrooms)
+    
+    return [{"name": searchroom[0]} for searchroom in searchrooms]
+
+
