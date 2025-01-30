@@ -5,10 +5,23 @@
     background-color: skyblue;
 }
 
-.timer{
-    width: 60px;
-    height: 60px; 
-    font-size: 100px;
+button {
+    padding: 20px 0;
+    font-size: 30px;
+    display: inline-block;
+    padding: .8rem 1.6rem;
+    border: none;
+    color: #FFF;
+    background-color: skyblue;
+    border-radius: 15px;
+}
+button:hover {
+    cursor: pointer;
+    background-color:  skyblue;
+}
+button:disabled {
+    cursor: default;
+    background-color: skyblue;
 }
 
 body {

@@ -24,10 +24,17 @@
     </div>
     <hr>
 
-    <div>
-    <a href = "{{ url_for('timer')}}">⏱</a>
+    <div id="timer">
+    <button onclick="next()">タイマー</button>
     </div>
+    
     <nav>
     </nav>
+
+    <script>
+        function next() {
+            location.href="{{ url_for('timer') }}"
+        }
+    </script>
 
 {% endblock %}

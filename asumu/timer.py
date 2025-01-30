@@ -2,10 +2,11 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-#タイム画面
-@app.route('/timer')
-def timer():
-    return render_template('timer.htm')
+@app.route('/timer', methods=['POST'])
+def post():
+    filed = request.form["field"]
+    return render_template('timer.html')
+
 
 if __name__ == '__main__':
     app.run(debug = True)
