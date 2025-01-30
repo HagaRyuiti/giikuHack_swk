@@ -1,4 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request, jsonify
+from create import roomcreate
+from create import get_tables
 
 app = Flask(__name__)
 
@@ -6,7 +8,8 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.htm')
+    roomlist = get_tables()
+    return render_template('home.htm', roomlist=roomlist)
 
 #アカウント画面
 @app.route('/account')
@@ -27,6 +30,18 @@ def create():
 @app.route('/timer')
 def timer():
     return render_template('timer.htm')
+
+# 部屋作成処理 (POSTメソッド対応)
+@app.route('/createroom', methods=['POST'])
+def createroom():
+    data = request.get_json()
+    roomname = data.get('roomname', '')
+    
+    if roomname:
+        roomcreate(roomname)  # 部屋を作成
+        return jsonify({'message': '部屋が作成されました'}), 200
+    else:
+        return jsonify({'message': '部屋名が必要です'}), 400
 
 if __name__ == '__main__':
     app.run(debug = True)
