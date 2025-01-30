@@ -14,7 +14,10 @@
         <div class="ci2cle1"></        
     <hr>
 </div>
-
-
+<ul>
+    {% for room in roomlist %}
+        <li>{{ room }}</li>
+    {% endfor %}
+</ul>
 
 {% endblock %}
