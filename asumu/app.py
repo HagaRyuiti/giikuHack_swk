@@ -9,6 +9,7 @@ app = Flask(__name__)
 @app.route('/home')
 def home():
     roomlist = get_tables()
+    print(roomlist)
     return render_template('home.htm', roomlist=roomlist)
 
 #アカウント画面
