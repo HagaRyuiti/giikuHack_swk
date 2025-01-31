@@ -13,7 +13,9 @@ def roomcreate(roomname, owner_id=1):
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
-                time TIME UNIQUE NOT NULL
+                subject TEXT UNIQUE NOT NULL,
+                time TEXT UNIQUE NOT NULL,
+                online TEXT UnIQUE NOT NULL
             );
         """)
 
@@ -43,7 +45,7 @@ def roomcreate(roomname, owner_id=1):
         cur.execute("INSERT INTO rooms (name, owner_id) VALUES (?, ?)", (roomname,  owner_id))
 
 
-# データベースのテーブル一覧を取得する関数
+# データベースのroomsテーブル一覧を取得する関数
 def get_tables():
     db_name = "room.db"
     
@@ -55,7 +57,7 @@ def get_tables():
     
     return [{"name": room[0]} for room in rooms]
 
-#
+#データベースのroomsテーブルを検索して取得する関数
 def roomsearch(key):
     db_name = "room.db"
     
