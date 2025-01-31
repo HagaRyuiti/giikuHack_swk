@@ -6,31 +6,17 @@
 
 {% block content %}
 
-    <h3>KAIT</h3>
-    <div class="display">
-    <div class="circle1"></div>
-    </div>
-    <hr>
-
-    <h3>swk</h3>
-    <div class="display">
-    <div class="circle1"></div>
-    </div>
-    <hr>
-
-    <h3>hackthon</h3>
-    <div class="display">
-    <div class="circle1"></div>
-    </div>
-    <hr>
+    {% for room in roomlist %}
+        <h3>{{ room.name }}</h3>
+        <div class="display">
+        <div class="circle1"></div>
+        </div>
+        <hr>
+    {% endfor %}
 
     <div id="timer">
     <button onclick="next()">タイマー</button>
     </div>
-
-    {% for room in roomlist %}
-        <li>{{ room }}</li>
-    {% endfor %}
 
     {% for users in timelist %}
     <li>{{ users }}</li>

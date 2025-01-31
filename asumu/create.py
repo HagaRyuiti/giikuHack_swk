@@ -46,12 +46,13 @@ def roomcreate(roomname, owner_id=1):
 
 # データベースのテーブル一覧を取得する関数
 def get_tables():
-    # データベースファイルの名前
     db_name = "room.db"
     
-    # データベース接続
     with sqlite3.connect(db_name) as conn:
         cur = conn.cursor()
-        rooms = cur.execute("""SELECT * FROM rooms""")
-    return rooms
+        rooms = cur.execute("""SELECT name FROM rooms""").fetchall()
+
+    print(rooms)
+    
+    return [{"name": room[0]} for room in rooms]
 

@@ -12,6 +12,7 @@ app = Flask(__name__)
 def home():
     roomlist = get_tables()
     timelist = time_get_tables()
+    print(roomlist)
     return render_template('home.htm', roomlist=roomlist, timelist=timelist)
 
 
