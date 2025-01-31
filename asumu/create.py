@@ -13,7 +13,7 @@ def roomcreate(roomname, owner_id=1):
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
-                time TIME UNIQUE NOT NULL
+                time TEXT UNIQUE NOT NULL
             );
         """)
 

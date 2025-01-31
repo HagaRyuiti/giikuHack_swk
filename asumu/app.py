@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify
 from create import roomcreate
 from create import get_tables
+from create import roomsearch
 from save import timecreate
 from save import time_get_tables
-from create import roomsearch
 
 app = Flask(__name__)
 
@@ -11,9 +11,9 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/home')
 def home():
+    
     roomlist = get_tables()
     timelist = time_get_tables()
-    print(roomlist)
     return render_template('home.htm', roomlist=roomlist, timelist=timelist)
 
 

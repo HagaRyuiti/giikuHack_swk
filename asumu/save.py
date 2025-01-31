@@ -1,6 +1,6 @@
 import sqlite3
 
-def timecreate(savetime, owner_id=1):
+def timecreate(savetime, username="test"):
     # データベースファイルの名前
     db_name = "room.db"
     
@@ -8,8 +8,8 @@ def timecreate(savetime, owner_id=1):
     with sqlite3.connect(db_name) as conn:
         cur = conn.cursor()
 
-    # ルームを作成（仮に owner_id を 1 にする）
-        cur.execute("INSERT INTO rooms (name, owner_id) VALUES (?, ?)", (savetime,  owner_id))
+    # ルームを作成（仮に username を test にする）
+        cur.execute("INSERT INTO users (username, time) VALUES (?, ?)", (username,  savetime))
 
 # データベースのテーブル一覧を取得する
 def time_get_tables():
