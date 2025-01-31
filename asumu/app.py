@@ -3,6 +3,7 @@ from create import roomcreate
 from create import get_tables
 from save import timecreate
 from save import time_get_tables
+from create import roomsearch
 
 app = Flask(__name__)
 
@@ -24,7 +25,9 @@ def account():
 #検索画面
 @app.route('/search')
 def search():
-    return render_template('search.htm')
+    roomlist = get_tables()
+    print(roomlist)
+    return render_template('search.htm', roomlist=roomlist)
 
 #作成画面
 @app.route('/create')
@@ -35,6 +38,15 @@ def create():
 @app.route('/timer')
 def timer():
     return render_template('timer.htm')
+
+# 部屋検索処理 (POSTメソッド対応)
+@app.route('/searchroom', methods=['POST'])
+def searchroom():
+    data = request.get_json()
+    key = data.get('roomname', '')
+    sroom = roomsearch(key)
+    return jsonify(sroom)  # JSON で返す
+
 
 # 部屋作成処理 (POSTメソッド対応)
 @app.route('/createroom', methods=['POST'])
