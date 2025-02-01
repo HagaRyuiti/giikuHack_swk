@@ -2,13 +2,10 @@ from flask import Flask, render_template, redirect, url_for, request, jsonify
 from create import roomcreate
 from create import get_tables
 from create import roomsearch
-<<<<<<< HEAD
 from flask_socketio import SocketIO, join_room, leave_room, emit
-=======
 from save import timecreate
 from save import time_get_tables
 import sqlite3
->>>>>>> a9bcb1654d68880e6d9cb248d590cd38fb2ed6c8
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -159,8 +156,4 @@ def createsave():
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     socketio.run(app, host='0.0.0.0', port=5000, debug = True)
-=======
-    app.run(debug = True)
->>>>>>> a9bcb1654d68880e6d9cb248d590cd38fb2ed6c8
