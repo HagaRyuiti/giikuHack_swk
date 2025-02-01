@@ -30,7 +30,7 @@
 <div class="wrapper">
 
     <!-- 計測時間を表示 -->
-    <div id="time">00:00.000</div>
+    <div id="time">00:00:00.</div>
 
     <!-- スタート・ストップ・リセットボタン -->
     <button id="start" onclick="start()">Start</button>
@@ -40,9 +40,8 @@
 
 <button id="timer" onclick="next()">タイマー</button>
 
-<form action="/result">
-<button type="submit" id="save" formmethod="post" >保存</button>
-</form>
+<button  id="save" onclick="save()" >保存</button>
+
 
 <script>
     function next() {

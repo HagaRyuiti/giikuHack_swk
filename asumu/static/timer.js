@@ -39,6 +39,7 @@ function stop(){
     startButton.disabled = false;
     stopButton.disabled = true;
     resetButton.disabled = false;
+    
 }
 
 // リセットボタン押下時
@@ -49,7 +50,7 @@ function reset(){
     // 変数、表示を初期化
     elapsedTime = 0;
     holdTime = 0;
-    showTime.textContent = "00:00.000";
+    showTime.textContent = "00:00:00";
 
     startButton.disabled = false;
     stopButton.disabled = true;
@@ -62,9 +63,69 @@ function measureTime() {
     timer = setTimeout(function () {
         // 経過時間を設定し、画面へ表示
         elapsedTime = Date.now() - startTime + holdTime;
-        showTime.textContent = new Date(elapsedTime).toISOString().slice(14, 23);
-        
+        showTime.textContent = new Date(elapsedTime).toISOString().slice(11, 20);
         // 関数を呼び出し、時間計測を継続する
-        measureTime();
+        measureTime()
+        return {
+            elapsedTime,
+        };
     }, 10);
 }
+
+//時間を保存する
+function save() {
+    
+    //今までの時間のデータを持ってくる
+    function greet(callback) {
+        fetch("/getsave", { method: "GET"})
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(madetime => {
+                console.log(madetime[0]);
+                console.log(elapsedTime);
+                Imadetime = parseInt(madetime[0]) / 1000;
+                IelapasedTime = parseInt(elapsedTime) / 1000;
+                Mmadetime = Math.trunc(Imadetime);
+                MelapasedTime = Math.trunc(IelapasedTime);
+                console.log(Mmadetime);
+                console.log(MelapasedTime)
+                tasutime = Mmadetime + MelapasedTime
+                console.log(tasutime);
+                callback(tasutime);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+        
+    // フォームをサーバーに送信する方法
+    function savesave(tasutime){
+        console.log(tasutime)
+        data = tasutime
+        fetch("/createsave", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        body: JSON.stringify({ savetime: data })
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = "/home"; // 作成後、ホームページにリダイレクト
+            } else {
+                alert("時間の保存に失敗しました");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("エラーが発生しました");
+        });
+        }
+
+        greet(savesave);
+
+        }

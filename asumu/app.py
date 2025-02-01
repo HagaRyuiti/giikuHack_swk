@@ -2,7 +2,13 @@ from flask import Flask, render_template, redirect, url_for, request, jsonify
 from create import roomcreate
 from create import get_tables
 from create import roomsearch
+<<<<<<< HEAD
 from flask_socketio import SocketIO, join_room, leave_room, emit
+=======
+from save import timecreate
+from save import time_get_tables
+import sqlite3
+>>>>>>> a9bcb1654d68880e6d9cb248d590cd38fb2ed6c8
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -14,9 +20,11 @@ rooms = {}  # 各ルームごとの参加者リスト
 @app.route('/')
 @app.route('/home')
 def home():
+    
     roomlist = get_tables()
-    print(roomlist)
-    return render_template('home.htm', roomlist=roomlist)
+    timelist = time_get_tables()
+    return render_template('home.htm', roomlist=roomlist, timelist=timelist)
+
 
 #アカウント画面
 @app.route('/account')
@@ -122,5 +130,37 @@ def handle_leave(data):
         emit('update_users', list(rooms[room].values()), room=room)
 
 
+
+#データべースから勉強時間を取得する
+@app.route('/getsave', methods=['GET'])
+def getsave():
+    
+    db_name = "room.db"
+
+    with sqlite3.connect(db_name) as conn:
+        cur = conn.cursor()
+        madetime = cur.execute("""SELECT time FROM users""").fetchall()
+        print(madetime)
+    return madetime
+
+
+# 勉強時間状況
+@app.route('/createsave', methods=['POST'])
+def createsave():
+    time = request.get_json()
+    savetime = time.get('savetime', '')
+    
+    if savetime:
+        timecreate(savetime)  
+        return jsonify({'message': '勉強時間が保存されました'}), 200
+    else:
+        return jsonify({'message': '勉強時間が必要です'}), 400
+    
+
+
 if __name__ == '__main__':
+<<<<<<< HEAD
     socketio.run(app, host='0.0.0.0', port=5000, debug = True)
+=======
+    app.run(debug = True)
+>>>>>>> a9bcb1654d68880e6d9cb248d590cd38fb2ed6c8
