@@ -2,8 +2,13 @@ from flask import Flask, render_template, redirect, url_for, request, jsonify
 from create import roomcreate
 from create import get_tables
 from create import roomsearch
+from flask_socketio import SocketIO, join_room, leave_room, emit
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
+
+rooms = {}  # 各ルームごとの参加者リスト
 
 #ホーム画面
 @app.route('/')
@@ -45,6 +50,13 @@ def room():
         return jsonify({"status": "success", "roomname": roomname})
     else:
         return jsonify({"status": "error", "message": "部屋名が指定されていません"}), 400
+    
+#ルーム画面（退室）
+@app.route('/outroom')
+def outroom():
+    roomlist = get_tables()
+    print(roomlist)
+    return render_template('home.htm', roomlist=roomlist)
 
 # ルーム詳細ページ
 @app.route('/room/<roomname>')
@@ -71,6 +83,44 @@ def createroom():
         return jsonify({'message': '部屋が作成されました'}), 200
     else:
         return jsonify({'message': '部屋名が必要です'}), 400
+    
+@socketio.on('connect')
+def handle_connect():
+    print(f'Client connected: {request.sid}')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    for room, users in rooms.items():
+        if request.sid in users:
+            users.pop(request.sid)
+            leave_room(room)  # ルームからも削除
+            emit('update_users', list(users.values()), room=room)
+            break
+    print(f'Client disconnected: {request.sid}')
+
+@socketio.on('join_room')
+def handle_join(data):
+    username = data['username']
+    room = data['room']
+    
+    join_room(room)
+    
+    # ルームの参加者リストを更新
+    if room not in rooms:
+        rooms[room] = {}
+    rooms[room][request.sid] = username
+    
+    emit('update_users', list(rooms[room].values()), room=room)
+
+@socketio.on('leave_room')
+def handle_leave(data):
+    room = data['room']
+    
+    if room in rooms and request.sid in rooms[room]:
+        rooms[room].pop(request.sid)
+        leave_room(room)
+        emit('update_users', list(rooms[room].values()), room=room)
+
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug = True)

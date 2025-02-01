@@ -23,7 +23,7 @@ def roomcreate(roomname, owner_id=1):
         cur.execute("""
             CREATE TABLE IF NOT EXISTS rooms (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
+                name TEXT UNIQUE NOT NULL,
                 owner_id INTEGER NOT NULL,
                 FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
             );
@@ -51,19 +51,39 @@ def get_tables():
     
     with sqlite3.connect(db_name) as conn:
         cur = conn.cursor()
+        
+        # rooms テーブルが存在するかをチェック
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='rooms'")
+        table_exists = cur.fetchone()
+
+        if not table_exists:
+            print("rooms テーブルが存在しません。")
+            return []
+
+        # rooms テーブルが存在すれば一覧を取得
         rooms = cur.execute("SELECT name FROM rooms").fetchall()
 
     print(rooms)
     
     return [{"name": room[0]} for room in rooms]
 
-#データベースのroomsテーブルを検索して取得する関数
+# データベースのroomsテーブルを検索して取得する関数
 def roomsearch(key):
     db_name = "room.db"
     
     with sqlite3.connect(db_name) as conn:
         cur = conn.cursor()
-        search_key = f"%{key}%"  #'%' を key に付与して部分一致検索
+        
+        # rooms テーブルが存在するかをチェック
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='rooms'")
+        table_exists = cur.fetchone()
+
+        if not table_exists:
+            print("rooms テーブルが存在しません。")
+            return []
+
+        # 部分一致検索
+        search_key = f"%{key}%"  # '%' を key に付与して部分一致検索
         searchrooms = cur.execute(
             "SELECT name FROM rooms WHERE name LIKE ?", (search_key,)
         ).fetchall()
@@ -71,5 +91,3 @@ def roomsearch(key):
     print(searchrooms)
     
     return [{"name": searchroom[0]} for searchroom in searchrooms]
-
-

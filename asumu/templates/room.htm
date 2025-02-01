@@ -1,5 +1,7 @@
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename = 'home.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
 </head>
 
 {% extends "index.htm" %}
@@ -7,9 +9,44 @@
 {% block content %}
 
     <h1>{{ roomname }} の部屋</h1>
-    <div class="display">
-        <div class="circle1"></div>
-    </div>
-    <hr>
+        <h1>ルーム参加者一覧</h1>
+        <ul id="users"></ul>
 
+        <script>
+            const socket = io();
+            const username = prompt("ユーザー名を入力してください");
+            const room = "{{ roomname }}";  // Flask からルーム名を取得
+        
+            // ルームに参加
+            socket.emit("join_room", { username, room });
+        
+            // 参加者リストの更新
+            socket.on("update_users", (users) => {
+                const userList = document.getElementById("users");
+                userList.innerHTML = "";
+                users.forEach(user => {
+                    const li = document.createElement("li");
+                    li.textContent = user;
+                    userList.appendChild(li);
+                });
+            });
+        
+            // ウィンドウを閉じるor離れるときにルーム退出
+            window.addEventListener("beforeunload", () => {
+                socket.emit("leave_room", { room });
+            });
+        </script>
+        
+
+        <div id="create">
+            <button onclick="leaveRoom()">退室</button>
+        </div>
+        
+        <script>
+            function leaveRoom() {
+                socket.emit("leave_room", { room });
+                window.location.href = "{{ url_for('outroom') }}";
+            }
+        </script>
+        
 {% endblock %}
