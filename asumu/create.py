@@ -51,7 +51,7 @@ def get_tables():
     
     with sqlite3.connect(db_name) as conn:
         cur = conn.cursor()
-        rooms = cur.execute("""SELECT name FROM rooms""").fetchall()
+        rooms = cur.execute("SELECT name FROM rooms").fetchall()
 
     print(rooms)
     
