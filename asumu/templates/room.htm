@@ -14,9 +14,9 @@
 
         <script>
             const socket = io();
-            const username = prompt("ユーザー名を入力してください");
+            const username = "{{ session['username'] }}";  // Flask からユーザー名を取得
             const room = "{{ roomname }}";  // Flask からルーム名を取得
-        
+
             // ルームに参加
             socket.emit("join_room", { username, room });
         

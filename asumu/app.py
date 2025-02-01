@@ -1,7 +1,9 @@
-from flask import Flask, render_template, redirect, url_for, request, jsonify
+from flask import Flask, render_template, redirect, url_for, request, jsonify, session
 from create import roomcreate
 from create import get_tables
 from create import roomsearch
+from create import login_touroku
+from create import createdatabase
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from save import timecreate
 from save import time_get_tables
@@ -12,16 +14,45 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 rooms = {}  # 各ルームごとの参加者リスト
+username = "" #ユーザー名
 
-#ホーム画面
+#ログイン画面
 @app.route('/')
+def login():
+    createdatabase()
+    return render_template('login.htm')
+
+@app.route('/login', methods=['POST'])
+def loginuser():
+    data = request.get_json()
+    print(f"Received login request: {data}")
+    un = data.get('username', )
+    pw = data.get('password', )
+    print(f"Username: {un}, Password: {pw}")
+    user = login_touroku(un, pw)
+    print(user)
+    
+    if user:
+        session['username'] = user  # セッションにユーザー名を保存
+        return jsonify({'message': 'ユーザーがログインしました'}), 200
+    else:
+        return jsonify({'message': 'パスワードが異なっています'}), 400
+
+# ホーム画面
 @app.route('/home')
 def home():
-    
+    if 'username' not in session:
+        return redirect(url_for('login'))  # ログインしていない場合はログインページへ
+
     roomlist = get_tables()
     timelist = time_get_tables()
-    return render_template('home.htm', roomlist=roomlist, timelist=timelist)
+    return render_template('home.htm', roomlist=roomlist, timelist=timelist, username=session['username'])
 
+# ログアウト処理
+@app.route('/logout')
+def logout():
+    session.pop('username', None)  # セッションから削除
+    return redirect(url_for('login'))
 
 #アカウント画面
 @app.route('/account')
@@ -103,28 +134,23 @@ def handle_disconnect():
             break
     print(f'Client disconnected: {request.sid}')
 
+# ルーム参加処理（ユーザー名を取得して送信）
 @socketio.on('join_room')
 def handle_join(data):
-    username = data['username']
+    if 'username' not in session:
+        return  # ログインしていない場合は処理しない
+    
+    username = session['username']
     room = data['room']
-    
+
     join_room(room)
-    
+
     # ルームの参加者リストを更新
     if room not in rooms:
         rooms[room] = {}
     rooms[room][request.sid] = username
-    
-    emit('update_users', list(rooms[room].values()), room=room)
 
-@socketio.on('leave_room')
-def handle_leave(data):
-    room = data['room']
-    
-    if room in rooms and request.sid in rooms[room]:
-        rooms[room].pop(request.sid)
-        leave_room(room)
-        emit('update_users', list(rooms[room].values()), room=room)
+    emit('update_users', list(rooms[room].values()), room=room)
 
 
 
@@ -136,8 +162,16 @@ def getsave():
 
     with sqlite3.connect(db_name) as conn:
         cur = conn.cursor()
+
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
+
+        table_exists = cur.fetchone()
+        if not table_exists:
+            print("users テーブルが存在しません。")
+            return []
         madetime = cur.execute("""SELECT time FROM users""").fetchall()
         print(madetime)
+
     return madetime
 
 
