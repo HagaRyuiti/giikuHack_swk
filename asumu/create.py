@@ -14,7 +14,7 @@ def roomcreate(roomname, owner_id=1):
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
                 subject TEXT UNIQUE NOT NULL,
-                time TEXT UNIQUE NOT NULL,
+                time TEXT  NOT NULL,
                 online TEXT UNIQUE NOT NULL
             );
         """)

@@ -40,6 +40,22 @@ def create():
 def timer():
     return render_template('timer.htm')
 
+# ルーム画面（入室）
+@app.route('/room', methods=['POST'])
+def room():
+    data = request.get_json()
+    roomname = data.get('roomname', '')
+
+    if roomname:
+        return jsonify({"status": "success", "roomname": roomname})
+    else:
+        return jsonify({"status": "error", "message": "部屋名が指定されていません"}), 400
+
+# ルーム詳細ページ
+@app.route('/room/<roomname>')
+def room_detail(roomname):
+    return render_template('room.htm', roomname=roomname)
+
 # 部屋検索処理 (POSTメソッド対応)
 @app.route('/searchroom', methods=['POST'])
 def searchroom():
@@ -70,7 +86,7 @@ def getsave():
 
     with sqlite3.connect(db_name) as conn:
         cur = conn.cursor()
-        madetime = cur.execute("""SELEC time FROM users""")
+        madetime = cur.execute("""SELECT time FROM users""").fetchall()
         print(madetime)
     return madetime
 
@@ -82,7 +98,7 @@ def createsave():
     savetime = time.get('savetime', '')
     
     if savetime:
-        timecreate(savetime)  # 部屋を作成
+        timecreate(savetime)  
         return jsonify({'message': '勉強時間が保存されました'}), 200
     else:
         return jsonify({'message': '勉強時間が必要です'}), 400
