@@ -4,6 +4,7 @@ from create import get_tables
 from create import roomsearch
 from save import timecreate
 from save import time_get_tables
+import sqlite3
 
 app = Flask(__name__)
 
@@ -60,6 +61,20 @@ def createroom():
     else:
         return jsonify({'message': '部屋名が必要です'}), 400
 
+
+#データべースから勉強時間を取得する
+@app.route('/getsave', methods=['GET'])
+def getsave():
+    
+    db_name = "room.db"
+
+    with sqlite3.connect(db_name) as conn:
+        cur = conn.cursor()
+        madetime = cur.execute("""SELEC time FROM users""")
+        print(madetime)
+    return madetime
+
+
 # 勉強時間状況
 @app.route('/createsave', methods=['POST'])
 def createsave():
@@ -71,6 +86,8 @@ def createsave():
         return jsonify({'message': '勉強時間が保存されました'}), 200
     else:
         return jsonify({'message': '勉強時間が必要です'}), 400
+    
+
 
 if __name__ == '__main__':
     app.run(debug = True)

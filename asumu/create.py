@@ -15,7 +15,7 @@ def roomcreate(roomname, owner_id=1):
                 username TEXT UNIQUE NOT NULL,
                 subject TEXT UNIQUE NOT NULL,
                 time TEXT UNIQUE NOT NULL,
-                online TEXT UnIQUE NOT NULL
+                online TEXT UNIQUE NOT NULL
             );
         """)
 

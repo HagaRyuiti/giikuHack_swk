@@ -72,26 +72,34 @@ function measureTime() {
     }, 10);
 }
 
-function save() {
-    console.log(elapsedTime);
+
+//今までの時間のデータを持ってくる
+async function save() {
+    data = 0
+        const url = '/getsave'
+        const madetime =  fetch(url)
+        console.log(madetime)
     
-    // フォームをサーバーに送信する方法
-    fetch("/createsave", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ savetime: elapsedTime })
-    })
-    .then(response => {
-        if (response.ok) {
-            window.location.href = "/home"; // 作成後、ホームページにリダイレクト
-        } else {
-            alert("時間の保存に失敗しました");
+        // フォームをサーバーに送信する方法
+        console.log(elapsedTime);
+        console.log(madetime);
+        tasutime = madetime + elapsedTime
+        await fetch("/createsave", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        body: JSON.stringify({ savetime: tasutime })
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = "/home"; // 作成後、ホームページにリダイレクト
+            } else {
+                alert("時間の保存に失敗しました");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("エラーが発生しました");
+        });
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("エラーが発生しました");
-    });
-}
