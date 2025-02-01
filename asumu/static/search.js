@@ -26,6 +26,9 @@ function searchroom() {
                 <h3>${room.name}</h3>
                 <div class="display">
                     <div class="circle1"></div>
+                    <div id="create">
+                        <button onclick="inroom('${ room.name }')">入室</button>
+                    </div>
                 </div>
                 <hr>
             `;
