@@ -35,6 +35,22 @@ def create():
 def timer():
     return render_template('timer.htm')
 
+# ルーム画面（入室）
+@app.route('/room', methods=['POST'])
+def room():
+    data = request.get_json()
+    roomname = data.get('roomname', '')
+
+    if roomname:
+        return jsonify({"status": "success", "roomname": roomname})
+    else:
+        return jsonify({"status": "error", "message": "部屋名が指定されていません"}), 400
+
+# ルーム詳細ページ
+@app.route('/room/<roomname>')
+def room_detail(roomname):
+    return render_template('room.htm', roomname=roomname)
+
 # 部屋検索処理 (POSTメソッド対応)
 @app.route('/searchroom', methods=['POST'])
 def searchroom():

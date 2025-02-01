@@ -1,0 +1,15 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'home.css')}}">
+</head>
+
+{% extends "index.htm" %}
+
+{% block content %}
+
+    <h1>{{ roomname }} の部屋</h1>
+    <div class="display">
+        <div class="circle1"></div>
+    </div>
+    <hr>
+
+{% endblock %}
