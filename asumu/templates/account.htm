@@ -1,7 +1,12 @@
 {% extends "index.htm" %}
 
 {% block content %}
-    <h1>アカウント</h1>
-    
+
+<h1>アカウント</h1>
+<h2>{{ username }}さんの総勉強時間</h2>
+
+<div class="time">
+<h2>{{ timelist.timelist1 }}分{{ timelist.timelist2 }}秒</h2>
+</div>
 
 {% endblock %}

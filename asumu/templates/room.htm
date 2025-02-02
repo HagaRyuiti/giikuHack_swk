@@ -9,8 +9,17 @@
 {% block content %}
 
     <h1>{{ roomname }} の部屋</h1>
+        <!-- 計測時間を表示 -->
+        <div id="time">00:00:00.</div>
+
+        <!-- スタート・ストップ・リセットボタン -->
+        <button id="start" onclick="start()">Start</button>
+        <button id="stop" onclick="stop()" disabled>Stop</button>
+        <button id="reset" onclick="reset()" disabled>Reset</button>
+        <button  id="save" onclick="save()" >保存</button>
         <h1>ルーム参加者一覧</h1>
         <ul id="users"></ul>
+
 
         <script>
             const socket = io();
@@ -48,5 +57,6 @@
                 window.location.href = "{{ url_for('outroom') }}";
             }
         </script>
+        <script src="{{ url_for('static', filename='timer.js') }}"></script>
         
 {% endblock %}

@@ -87,7 +87,7 @@ function save() {
             .then(madetime => {
                 console.log(madetime[0]);
                 console.log(elapsedTime);
-                Imadetime = parseInt(madetime[0]) / 1000;
+                Imadetime = parseInt(madetime[0]) ;
                 IelapasedTime = parseInt(elapsedTime) / 1000;
                 Mmadetime = Math.trunc(Imadetime);
                 MelapasedTime = Math.trunc(IelapasedTime);
@@ -105,13 +105,12 @@ function save() {
     // フォームをサーバーに送信する方法
     function savesave(tasutime){
         console.log(tasutime)
-        data = tasutime
         fetch("/createsave", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-        body: JSON.stringify({ savetime: data })
+        body: JSON.stringify({ savetime: tasutime })
         })
         .then(response => {
             if (response.ok) {

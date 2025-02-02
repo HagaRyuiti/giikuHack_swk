@@ -8,13 +8,14 @@ from flask_socketio import SocketIO, join_room, leave_room, emit
 from save import timecreate
 from save import time_get_tables
 import sqlite3
+import time
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 rooms = {}  # 各ルームごとの参加者リスト
-username = "" #ユーザー名
 
 #ログイン画面
 @app.route('/')
@@ -45,8 +46,7 @@ def home():
         return redirect(url_for('login'))  # ログインしていない場合はログインページへ
 
     roomlist = get_tables()
-    timelist = time_get_tables()
-    return render_template('home.htm', roomlist=roomlist, timelist=timelist, username=session['username'])
+    return render_template('home.htm', roomlist=roomlist, username=session['username'])
 
 # ログアウト処理
 @app.route('/logout')
@@ -57,7 +57,14 @@ def logout():
 #アカウント画面
 @app.route('/account')
 def account():
-    return render_template('account.htm')
+    username = session['username']
+    Mtimelist, Stimelist = time_get_tables(username)
+    print(Mtimelist)
+    print(Stimelist)
+    timelist = {
+        'timelist1' : Mtimelist ,
+        'timelist2' : Stimelist }
+    return render_template('account.htm', timelist=timelist, username=username)
 
 #検索画面
 @app.route('/search')
@@ -70,11 +77,6 @@ def search():
 @app.route('/create')
 def create():
     return render_template('create.htm')
-
-#タイム画面
-@app.route('/timer')
-def timer():
-    return render_template('timer.htm')
 
 # ルーム画面（入室）
 @app.route('/room', methods=['POST'])
@@ -152,6 +154,23 @@ def handle_join(data):
 
     emit('update_users', list(rooms[room].values()), room=room)
 
+# ルーム退出処理
+@socketio.on('leave_room')
+def handle_leave(data):
+    if 'username' not in session:
+        return
+
+    username = session['username']
+    room = data['room']
+
+    leave_room(room)
+
+    # ルームの参加者リストを更新
+    if room in rooms and request.sid in rooms[room]:
+        del rooms[room][request.sid]
+        emit('update_users', list(rooms[room].values()), room=room)
+
+
 
 
 #データべースから勉強時間を取得する
@@ -175,14 +194,13 @@ def getsave():
     return madetime
 
 
-# 勉強時間状況
 @app.route('/createsave', methods=['POST'])
 def createsave():
     time = request.get_json()
     savetime = time.get('savetime', '')
-    
+
     if savetime:
-        timecreate(savetime)  
+        timecreate(savetime, session['username'])  # ユーザー名を渡す
         return jsonify({'message': '勉強時間が保存されました'}), 200
     else:
         return jsonify({'message': '勉強時間が必要です'}), 400
